@@ -13,6 +13,8 @@ CURLOPTS=(
 --user-agent "$USER_AGENT"
 )
 
+SECURITY_DELAY=${SECURITY_DELAY:-172800}
+
 if [ ! -f "$PROJECT_FILE" ]; then
     echo "modrinth.yaml not found" >&2
     exit 1
@@ -56,7 +58,7 @@ function get_project_latest_version {
     # macOS doesn't support that.
     jq --raw-output \
         --arg versionType "$VERSION_TYPE" \
-        --argjson securityDelay 172800 \
+        --argjson securityDelay $SECURITY_DELAY \
         'map(select(
             .version_type == $versionType
             and .status == "listed"
