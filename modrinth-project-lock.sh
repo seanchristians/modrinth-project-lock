@@ -71,8 +71,8 @@ function get_project_latest_version {
 
 # Convert the YAML representation to JSON and add default values for game_version, loader, and version_type.
 yq ".projects[] |= {
-\"version_type\": \"release\",
-\"loader\": \"$DEFAULT_LOADER\",
+\"release_type\": \"release\",
+\"prefix\": \"$DEFAULT_LOADER\",
 \"game_version\": \"$DEFAULT_GAME_VERSION\"
 } + . | .projects" -o json $PROJECT_FILE > $PROJECT_CACHE
 
@@ -80,9 +80,9 @@ yq ".projects[] |= {
 
 while IFS= read -r PROJECT_JSON; do
     GAME_VERSION=$(jq -r '.game_version' <<< "$PROJECT_JSON")
-    LOADER=$(jq -r '.loader' <<< "$PROJECT_JSON")
+    LOADER=$(jq -r '.prefix' <<< "$PROJECT_JSON")
     PROJECT_ID=$(jq -r '.id' <<< "$PROJECT_JSON")
-    VERSION_TYPE=$(jq -r '.version_type' <<< "$PROJECT_JSON")
+    VERSION_TYPE=$(jq -r '.release_type' <<< "$PROJECT_JSON")
 
     PROJECT_STRING=""
 
