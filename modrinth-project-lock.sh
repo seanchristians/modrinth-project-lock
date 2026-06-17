@@ -4,7 +4,7 @@ PROJECT_FILE="./modrinth.yaml"
 LOCK_FILE="./modrinth.lock.txt"
 
 API='https://api.modrinth.com/v2'
-USER_AGENT='seanchristians/modrinth-project-lock/0.1'
+USER_AGENT='seanchristians/modrinth-project-lock/1.0.0'
 
 CURLOPTS=(
 --location --compressed
