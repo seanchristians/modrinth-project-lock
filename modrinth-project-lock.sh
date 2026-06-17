@@ -13,6 +13,8 @@ CURLOPTS=(
 --user-agent "$USER_AGENT"
 )
 
+# The security delay reduces supply-chain attack risk by filtering out
+# versions published within the last two days.
 SECURITY_DELAY=${SECURITY_DELAY:-172800}
 
 if [ ! -f "$PROJECT_FILE" ]; then
@@ -49,9 +51,6 @@ function get_project_latest_version {
         --data-urlencode "include_changelog=false" \
         --output "$MODRINTH_CACHE"
 
-    # The security delay reduces supply-chain attack risk by filtering out
-    # versions published within the last two days.
-    #
     # * Note about the 'gsub' command *: dates from Modrinth include fractional
     # seconds, but jq's implementation of 'fromdateiso8601' doesn't support
     # this. Normally we could use strptime() with the %f substitution, but
