@@ -1,0 +1,14 @@
+---
+minecraft_version: 26.1.2
+loader: fabric
+projects:
+  - id: fabric-api
+  - id: geyser
+    version_type: beta
+  - id: floodgate
+  - id: lithium
+  - id: ferrite-core
+  - id: fabric-language-kotlin
+  - id: veinminer
+  - id: treecapitator
+    loader: datapack
