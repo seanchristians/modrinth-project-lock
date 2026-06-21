@@ -11,7 +11,8 @@ else # Use modrinth.yaml/yml in the current directory as the project file
     PROJECT_FILE=$(find . -type f -maxdepth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
 fi
 
-LOCK_FILE="./modrinth.lock.txt"
+PROJECT_DIR=$(dirname "$PROJECT_FILE")
+LOCK_FILE="$PROJECT_DIR/modrinth.lock.txt"
 
 API='https://api.modrinth.com/v2'
 USER_AGENT='seanchristians/modrinth-project-lock/1.1.0'
