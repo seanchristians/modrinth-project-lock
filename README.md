@@ -30,3 +30,20 @@ Navigate to the folder containing your `modrinth.yaml` file and run [modrinth-pr
 A file called "modrinth.lock.txt" will be created. (See example in the samples folder)
 
 Provide this file to your itzg/docker-minecraft-server by setting the env var `MODRINTH_PROJECTS=@/path/to/modrinth.lock.txt` (make sure your lock-file is available inside your container).
+
+## GitHub Action usage
+
+You can use GitHub Actions to automatically check for updates to your lock-file and propose a PR when updates are available.
+
+```yaml
+permissions:
+  contents: write
+  pull-requests: write
+steps:
+  - uses: actions/checkout@v7
+  - uses: seanchristians/modrinth-project-lock@v1
+```
+
+|     Input      | Required | Description                              | Default         | Example value           |
+| :------------: | :------: | ---------------------------------------- | --------------- | ----------------------- |
+| `project-file` | `False`  | Path to your Modrinth project YAML file. | ./modrinth.yaml | `samples/modrinth.yaml` |
