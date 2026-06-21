@@ -1,6 +1,14 @@
 #!/bin/bash -euo pipefail
 
-PROJECT_FILE="${1:-}"
+if [ ! -z "${1:-}" ]; then # Set project from first input
+    PROJECT_FILE="$1"
+elif [ ! -z "$PROJECT_FILE" ] && [ ! -f "$PROJECT_FILE" ]; then # Set project from PROJECT_FILE env var
+    echo "Project file not found" >&2
+    exit 1
+else # Use modrinth.yaml/yml in the current directory as the project file
+    PROJECT_FILE=$(find . -type f -depth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
+fi
+
 LOCK_FILE="./modrinth.lock.txt"
 
 API='https://api.modrinth.com/v2'
@@ -16,15 +24,6 @@ CURLOPTS=(
 # The security delay reduces supply-chain attack risk by filtering out
 # versions published within the last two days.
 SECURITY_DELAY=${SECURITY_DELAY:-172800}
-
-if [ -z "$PROJECT_FILE" ]; then
-    PROJECT_FILE=$(find . -type f -depth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
-fi
-
-if [ ! -f "$PROJECT_FILE" ]; then
-    echo "Project file not found" >&2
-    exit 1
-fi
 
 DEFAULT_GAME_VERSION=$(yq '.minecraft_version' $PROJECT_FILE)
 DEFAULT_LOADER=$(yq '.loader' $PROJECT_FILE)
