@@ -34,7 +34,7 @@ runs:
       env:
         MPL_SCRIPT: ${{ github.action_path }}/modrinth-project-lock.sh
         PROJECT_FILE: ${{ steps.workdir.outputs.project-filename }}
-      run: "$MPL_SCRIPT"
+      run: $MPL_SCRIPT
 
     - name: Propose PR
       shell: bash
