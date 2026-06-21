@@ -1,6 +1,6 @@
 #!/bin/bash -euo pipefail
 
-PROJECT_FILE="./modrinth.yaml"
+PROJECT_FILE="${1:-}"
 LOCK_FILE="./modrinth.lock.txt"
 
 API='https://api.modrinth.com/v2'
@@ -17,8 +17,12 @@ CURLOPTS=(
 # versions published within the last two days.
 SECURITY_DELAY=${SECURITY_DELAY:-172800}
 
+if [ -z "$PROJECT_FILE" ]; then
+    PROJECT_FILE=$(find . -type f -depth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
+fi
+
 if [ ! -f "$PROJECT_FILE" ]; then
-    echo "modrinth.yaml not found" >&2
+    echo "Project file not found" >&2
     exit 1
 fi
 
