@@ -6,7 +6,7 @@ elif [ ! -z "${PROJECT_FILE:-}" ] && [ ! -f "$PROJECT_FILE" ]; then # Set projec
     echo "Project file not found" >&2
     exit 1
 else # Use modrinth.yaml/yml in the current directory as the project file
-    PROJECT_FILE=$(find . -type f -depth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
+    PROJECT_FILE=$(find . -type f -maxdepth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
 fi
 
 LOCK_FILE="./modrinth.lock.txt"
