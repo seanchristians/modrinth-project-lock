@@ -2,7 +2,7 @@
 
 if [ ! -z "${1:-}" ]; then # Set project from first input
     PROJECT_FILE="$1"
-elif [ ! -z "$PROJECT_FILE" ] && [ ! -f "$PROJECT_FILE" ]; then # Set project from PROJECT_FILE env var
+elif [ ! -z "${PROJECT_FILE:-}" ] && [ ! -f "$PROJECT_FILE" ]; then # Set project from PROJECT_FILE env var
     echo "Project file not found" >&2
     exit 1
 else # Use modrinth.yaml/yml in the current directory as the project file
