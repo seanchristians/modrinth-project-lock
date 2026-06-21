@@ -1,0 +1,51 @@
+name: Modrinth project lock
+author: Sean Christians
+description: Manage projects from Modrinth for itzg/docker-minecraft-server
+
+inputs:
+  project-file:
+    description: Path to the modrinth project YAML file. Defaults to modrinth.yaml/yml.
+
+runs:
+  using: composite
+  steps:
+    - name: Create new branch
+      id: branch
+      shell: bash
+      env:
+        PROJECT_FILE: ${{ inputs.project-file || 'root' }}
+      run: |
+        BRANCH_NAME="mpl/$PROJECT_FILE"
+        git switch -c "$BRANCH_NAME"
+        echo "branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+
+    - name: Set workdir
+      id: workdir
+      env:
+        PROJECT_FILE: ${{ inputs.project-file || '.' }}
+      shell: bash
+      run: |
+        echo "workdir=$(dirname "$PROJECT_FILE")" >> "$GITHUB_OUTPUT"
+        echo "project-filename=$(basename "$PROJECT_FILE")" >> "$GITHUB_OUTPUT"
+
+    - name: Build lock-file
+      shell: bash
+      working-directory: ${{ steps.workdir.outputs.workdir }}
+      env:
+        MPL_SCRIPT: ${{ github.action_path }}/modrinth-project-lock.sh
+        PROJECT_FILE: ${{ steps.workdir.outputs.project-filename }}
+      run: "$MPL_SCRIPT"
+
+    - name: Propose PR
+      shell: bash
+      env:
+        BASE_BRANCH: ${{ github.event.repository.default_branch }}
+        HEAD_BRANCH: ${{ steps.branch.outputs.branch }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        git commit -m "Update Modrinth project lock-file"
+        git push --force
+        gh pr create \
+          --base "$BASE_BRANCH" \
+          --head "$HEAD_BRANCH" \
+          --title "Update Modrinth project lock-file"
