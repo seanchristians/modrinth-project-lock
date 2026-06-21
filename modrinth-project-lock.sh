@@ -2,12 +2,16 @@
 
 if [ ! -z "${1:-}" ]; then # Set project from first input
     PROJECT_FILE="$1"
-elif [ ! -z "${PROJECT_FILE:-}" ] && [ ! -f "$PROJECT_FILE" ]; then # Set project from PROJECT_FILE env var
+elif [ ! -z "${PROJECT_FILE:-}" ] && [ ! -f "$PROJECT_FILE" ]; then
     echo "Project file not found" >&2
     exit 1
+elif [ ! -z "$PROJECT_FILE" ]; then # Set project from PROJECT_FILE env var
+    :
 else # Use modrinth.yaml/yml in the current directory as the project file
     PROJECT_FILE=$(find . -type f -maxdepth 1 \( -name 'modrinth.yaml' -o -name 'modrinth.yml' \))
 fi
+
+echo "$PROJECT_FILE"
 
 LOCK_FILE="./modrinth.lock.txt"
 
@@ -76,7 +80,7 @@ yq ".projects[] |= {
 \"release_type\": \"release\",
 \"prefix\": \"$DEFAULT_LOADER\",
 \"game_version\": \"$DEFAULT_GAME_VERSION\"
-} + . | .projects" -o json $PROJECT_FILE > $PROJECT_CACHE
+} + . | .projects" -o json "$PROJECT_FILE" > "$PROJECT_CACHE"
 
 TEMP_LOCK_FILE=$(mktemp)
 
