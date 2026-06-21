@@ -75,7 +75,7 @@ yq ".projects[] |= {
 \"game_version\": \"$DEFAULT_GAME_VERSION\"
 } + . | .projects" -o json $PROJECT_FILE > $PROJECT_CACHE
 
-: > "$LOCK_FILE" # Clear the lock file
+TEMP_LOCK_FILE=$(mktemp)
 
 while IFS= read -r PROJECT_JSON; do
     GAME_VERSION=$(jq -r '.game_version' <<< "$PROJECT_JSON")
@@ -91,5 +91,7 @@ while IFS= read -r PROJECT_JSON; do
 
     PROJECT_STRING+=$(get_project_latest_version "$GAME_VERSION" "$LOADER" "$PROJECT_ID" "$VERSION_TYPE")
 
-    echo "$PROJECT_STRING" >> "$LOCK_FILE"
+    echo "$PROJECT_STRING" >> "$TEMP_LOCK_FILE"
 done < <(jq -c '.[]' $PROJECT_CACHE)
+
+mv "$TEMP_LOCK_FILE" "$LOCK_FILE"
