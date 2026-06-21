@@ -2,10 +2,6 @@ name: Test custom action
 on:
   workflow_dispatch:
 
-permissions:
-  pull-requests: write
-  contents: write
-
 jobs:
   lock:
     runs-on: ubuntu-latest
