@@ -1,4 +1,5 @@
-#!/usr/bin/env -S bash --noprofile --norc -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 if [ ! -z "${1:-}" ]; then # Set project from first input
     PROJECT_FILE="$1"
